@@ -1,14 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Image, Calendar, Newspaper, MessageSquare, ThumbsUp, Repeat, Send, MoreHorizontal, X } from "lucide-react";
+import { Image, Calendar, Newspaper, CreditCard } from "lucide-react";
 import myAvatar from "@assets/stock_images/professional_headsho_6a369208.jpg";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "wouter";
+import { ThumbsUp, MessageSquare, Repeat, Send, MoreHorizontal } from "lucide-react";
 
 export function CreatePost() {
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
     <div className="bg-card rounded-lg border border-border p-3 shadow-sm mb-2" data-testid="create-post-widget">
       <div className="flex gap-3 mb-2">
@@ -19,7 +16,6 @@ export function CreatePost() {
         <div className="flex-1">
             <button 
                 className="w-full text-left bg-transparent border border-muted hover:bg-muted/30 rounded-full h-12 px-4 text-sm font-medium text-muted-foreground transition-colors"
-                onClick={() => setIsFocused(true)}
                 data-testid="button-start-post"
             >
                 Start a post
@@ -29,6 +25,9 @@ export function CreatePost() {
       <div className="flex justify-between items-center px-2">
          <ActionButton icon={Image} label="Media" color="text-blue-500" />
          <ActionButton icon={Calendar} label="Event" color="text-orange-700" />
+         <Link href="/subscriptions" className="flex-1">
+           <ActionButton icon={CreditCard} label="Subscriptions" color="text-emerald-600" />
+         </Link>
          <ActionButton icon={Newspaper} label="Write article" color="text-orange-600" />
       </div>
     </div>
@@ -37,7 +36,7 @@ export function CreatePost() {
 
 function ActionButton({ icon: Icon, label, color }: { icon: any, label: string, color: string }) {
     return (
-        <button className="flex items-center gap-3 py-3 px-2 rounded hover:bg-muted/50 transition-colors flex-1 justify-center">
+        <button className="flex items-center gap-3 py-3 px-2 rounded hover:bg-muted/50 transition-colors w-full justify-center">
             <Icon className={`h-5 w-5 ${color}`} />
             <span className="text-sm font-medium text-muted-foreground">{label}</span>
         </button>
@@ -75,7 +74,6 @@ export function FeedPost({ author, content, image, stats }: PostProps) {
 
     return (
         <div className="bg-card rounded-lg border border-border mb-2 shadow-sm overflow-hidden" data-testid={`post-${author.name.replace(/\s+/g, '-').toLowerCase()}`}>
-            {/* Header */}
             <div className="p-3 pb-2 flex gap-3">
                 <Avatar className="h-12 w-12 cursor-pointer">
                     <AvatarImage src={author.avatar} />
@@ -99,19 +97,16 @@ export function FeedPost({ author, content, image, stats }: PostProps) {
                 </div>
             </div>
 
-            {/* Content */}
             <div className="px-4 pb-2">
                 <p className="text-sm whitespace-pre-line leading-relaxed">{content}</p>
             </div>
 
-            {/* Media */}
             {image && (
                 <div className="w-full bg-muted/20">
                     <img src={image} alt="Post content" className="w-full object-cover max-h-[500px]" />
                 </div>
             )}
 
-            {/* Stats */}
             <div className="px-4 py-2 border-b border-border/50">
                 <div className="flex justify-between items-center text-xs text-muted-foreground">
                     <div className="flex items-center gap-1 hover:text-primary hover:underline cursor-pointer">
@@ -130,15 +125,8 @@ export function FeedPost({ author, content, image, stats }: PostProps) {
                 </div>
             </div>
 
-            {/* Actions */}
             <div className="px-2 py-1 flex justify-between">
-                <PostAction 
-                    icon={ThumbsUp} 
-                    label="Like" 
-                    active={liked} 
-                    onClick={handleLike} 
-                    activeColor="text-blue-600 fill-blue-600"
-                />
+                <PostAction icon={ThumbsUp} label="Like" active={liked} onClick={handleLike} activeColor="text-blue-600 fill-blue-600" />
                 <PostAction icon={MessageSquare} label="Comment" />
                 <PostAction icon={Repeat} label="Repost" />
                 <PostAction icon={Send} label="Send" />
@@ -149,12 +137,8 @@ export function FeedPost({ author, content, image, stats }: PostProps) {
 
 function PostAction({ icon: Icon, label, active, onClick, activeColor }: { icon: any, label: string, active?: boolean, onClick?: () => void, activeColor?: string }) {
     return (
-        <button 
-            className={`flex items-center justify-center gap-2 py-3 px-2 rounded hover:bg-muted/50 transition-colors flex-1 ${active ? activeColor : 'text-muted-foreground hover:bg-muted/60'}`}
-            onClick={onClick}
-            data-testid={`button-post-${label.toLowerCase()}`}
-        >
-            <Icon className={`h-5 w-5 ${active ? '' : ''}`} />
+        <button className={`flex items-center justify-center gap-2 py-3 px-2 rounded hover:bg-muted/50 transition-colors flex-1 ${active ? activeColor : 'text-muted-foreground'}`} onClick={onClick}>
+            <Icon className="h-5 w-5" />
             <span className="text-sm font-semibold">{label}</span>
         </button>
     )

@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Search, Home, Users, Briefcase, MessageSquare, Bell, User } from "lucide-react";
+import { Search, Home, Users, Briefcase, MessageSquare, Bell, CreditCard } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import myAvatar from "@assets/stock_images/professional_headsho_6a369208.jpg";
@@ -27,12 +27,13 @@ export function Navbar() {
         </div>
 
         <ul className="flex items-center gap-1 sm:gap-6 h-full">
-          <NavItem icon={Home} label="Home" active />
-          <NavItem icon={Users} label="My Network" />
-          <NavItem icon={Briefcase} label="Jobs" />
-          <NavItem icon={MessageSquare} label="Messaging" />
-          <NavItem icon={Bell} label="Notifications" />
-          <li className="flex flex-col items-center justify-center cursor-pointer text-muted-foreground hover:text-foreground transition-colors group">
+          <NavItem href="/" icon={Home} label="Home" />
+          <NavItem href="/network" icon={Users} label="My Network" />
+          <NavItem href="/subscriptions" icon={CreditCard} label="My Subscriptions" />
+          <NavItem href="/jobs" icon={Briefcase} label="Jobs" />
+          <NavItem href="/messaging" icon={MessageSquare} label="Messaging" />
+          <NavItem href="/notifications" icon={Bell} label="Notifications" />
+          <li className="flex flex-col items-center justify-center cursor-pointer text-muted-foreground hover:text-foreground transition-colors group px-2">
              <Avatar className="h-6 w-6 mb-0.5">
                 <AvatarImage src={myAvatar} />
                 <AvatarFallback>ME</AvatarFallback>
@@ -45,11 +46,13 @@ export function Navbar() {
   );
 }
 
-function NavItem({ icon: Icon, label, active }: { icon: any, label: string, active?: boolean }) {
+function NavItem({ icon: Icon, label, active, href = "#" }: { icon: any, label: string, active?: boolean, href?: string }) {
   return (
-    <li className={`flex flex-col items-center justify-center cursor-pointer px-2 h-full border-b-2 ${active ? 'border-foreground text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'} transition-all`} data-testid={`nav-item-${label.toLowerCase()}`}>
-      <Icon className={`h-6 w-6 ${active ? 'fill-current' : ''}`} />
-      <span className="text-[12px] hidden md:block">{label}</span>
-    </li>
+    <Link href={href}>
+      <li className={`flex flex-col items-center justify-center cursor-pointer px-2 h-full border-b-2 transition-all ${active ? 'border-foreground text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'}`} data-testid={`nav-item-${label.toLowerCase().replace(/\s+/g, '-')}`}>
+        <Icon className={`h-6 w-6 ${active ? 'fill-current' : ''}`} />
+        <span className="text-[12px] hidden md:block">{label}</span>
+      </li>
+    </Link>
   );
 }
